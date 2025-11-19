@@ -46,17 +46,9 @@ fun EniShopApp(modifier: Modifier = Modifier) {
 
     Scaffold(
         topBar = {
-            var canBack = false
-            if (
-                currentRoute.toString().contains(ArticleDetailRoute.route) ||
-                currentRoute.toString().contains(ArticleAjouterRoute.route)
-                ){
-                canBack = true
-            }
-            Log.d("ROUTE_DEBUG", "currentRoute = ${currentRoute}, canBack = $canBack, articleRoute = ${ArticleDetailRoute.route}")
             TopBar(
-                navController = navController,
-                canBack = canBack)
+                onBackClic = { navController.popBackStack() },
+                canBack = currentRoute != ArticleListeRoute.route)
         },
         floatingActionButton = {
             if (currentRoute.toString().contains(ArticleListeRoute.route)) {

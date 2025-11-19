@@ -25,7 +25,7 @@ import androidx.navigation.NavController
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun TopBar(modifier: Modifier = Modifier, canBack: Boolean = false, navController: NavController) {
+fun TopBar(modifier: Modifier = Modifier, canBack: Boolean = false, onBackClic: () -> Unit) {
     TopAppBar(
         title = {
             Row(
@@ -48,7 +48,7 @@ fun TopBar(modifier: Modifier = Modifier, canBack: Boolean = false, navControlle
         navigationIcon = {
             if (canBack){
                 IconButton(onClick = {
-                    navController.popBackStack()
+                    onBackClic()
                 }) {
                     Icon(Icons.AutoMirrored.Filled.ArrowBack, "Back")
                 }
