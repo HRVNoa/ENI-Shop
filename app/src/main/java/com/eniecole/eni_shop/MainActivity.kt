@@ -9,8 +9,15 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -30,7 +37,19 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContent {
-            Eni_shopTheme {
+
+            val context = LocalContext.current
+            var isDarkTheme by remember() { mutableStateOf(false) }
+
+            LaunchedEffect(Unit) {
+                DataStoreManager.isDarkTheme(context = context).collect { value ->
+                    isDarkTheme = value
+                }
+            }
+
+            Eni_shopTheme(
+                darkTheme = isDarkTheme
+            ) {
                 EniShopApp()
             }
         }
