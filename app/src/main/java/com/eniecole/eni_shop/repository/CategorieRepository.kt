@@ -1,24 +1,30 @@
 package com.eniecole.eni_shop.repository
 
-import com.eniecole.eni_shop.CategorieDao
-import com.eniecole.eni_shop.DaoFactory
-import com.eniecole.eni_shop.DaoType
+import com.eniecole.eni_shop.dao.CategorieDao
 import com.eniecole.eni_shop.bo.Categorie
+import com.eniecole.eni_shop.dao.DaoType
 
-object CategorieRepository {
+class CategorieRepository(
+    private val categorieDaoRoom: CategorieDao,
+    private val categorieDaoMemory: CategorieDao
+) {
 
-    private val categorieDao: CategorieDao = DaoFactory.createCategorieDao(DaoType.MEMORY)
-
-    fun getCategorie(id: Long): Categorie? {
-        return categorieDao.findById(id)
+    suspend fun getCategorie(id: Long, type: DaoType = DaoType.MEMORY): Categorie? {
+        if (type == DaoType.MEMORY){
+            return categorieDaoMemory.findById(id)
+        }
+        return categorieDaoRoom.findById(id)
     }
 
-    fun addCategorie(categorie: Categorie): Long {
-        return categorieDao.insert(categorie)
+    suspend fun addCategorie(categorie: Categorie): Long {
+        return categorieDaoRoom.insert(categorie)
     }
 
-    fun findAll(): MutableList<Categorie> {
-        return categorieDao.findAll()
+    suspend fun findAll(type: DaoType = DaoType.MEMORY): List<Categorie> {
+        if (type == DaoType.MEMORY){
+            return categorieDaoMemory.findAll()
+        }
+        return categorieDaoRoom.findAll()
     }
 
 }

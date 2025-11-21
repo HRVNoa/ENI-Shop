@@ -1,24 +1,40 @@
 package com.eniecole.eni_shop.repository
 
-import com.eniecole.eni_shop.ArticleDao
-import com.eniecole.eni_shop.DaoFactory
-import com.eniecole.eni_shop.DaoType
+import com.eniecole.eni_shop.dao.ArticleDao
 import com.eniecole.eni_shop.bo.Article
+import com.eniecole.eni_shop.dao.DaoType
 
-object ArticleRepository {
+class ArticleRepository(
+    private val articleDaoRoom: ArticleDao,
+    private val articleDaoMemory: ArticleDao
+) {
 
-    private val articleDao: ArticleDao = DaoFactory.createArticleDao(DaoType.MEMORY)
-
-    fun getArticle(id: Long): Article? {
-        return articleDao.findById(id)
+    suspend fun getArticle(id: Long, type: DaoType = DaoType.MEMORY): Article? {
+        if (type == DaoType.MEMORY){
+            return articleDaoMemory.findById(id)
+        }
+        return articleDaoRoom.findById(id)
     }
 
-    fun addArticle(article: Article): Long {
-        return articleDao.insert(article)
+    suspend fun addArticle(article: Article, type: DaoType = DaoType.MEMORY): Long {
+        if (type == DaoType.MEMORY){
+            return articleDaoMemory.insert(article)
+        }
+        return articleDaoRoom.insert(article)
     }
 
-    fun findAll(): MutableList<Article> {
-        return articleDao.findAll()
+    suspend fun findAll(type: DaoType = DaoType.MEMORY): List<Article> {
+        if (type == DaoType.MEMORY){
+            return articleDaoMemory.findAll()
+        }
+        return articleDaoRoom.findAll()
     }
 
+    suspend fun delete(article: Article, type: DaoType = DaoType.MEMORY) {
+        if (type == DaoType.MEMORY){
+            articleDaoMemory.delete(article)
+        }else{
+            articleDaoRoom.delete(article)
+        }
+    }
 }

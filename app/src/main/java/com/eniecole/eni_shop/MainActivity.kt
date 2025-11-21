@@ -23,6 +23,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
+import com.eniecole.eni_shop.ui.common.BottomBar
 import com.eniecole.eni_shop.ui.common.TopBar
 import com.eniecole.eni_shop.ui.screen.article.ArticleAjouterFAB
 import com.eniecole.eni_shop.ui.screen.article.ControllerArticleAjout
@@ -77,7 +78,8 @@ fun EniShopApp(modifier: Modifier = Modifier) {
                     }
                 )
             }
-        }
+        },
+        bottomBar = { BottomBar() }
     ){ padding ->
         Column(
             Modifier.padding(padding

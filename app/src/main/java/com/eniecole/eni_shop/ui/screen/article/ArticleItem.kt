@@ -23,7 +23,6 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
-import com.eniecole.eni_shop.ArticleDetailActivity
 import com.eniecole.eni_shop.bo.Article
 import com.eniecole.eni_shop.utils.decimal
 

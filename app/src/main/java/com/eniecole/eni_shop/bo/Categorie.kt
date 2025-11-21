@@ -1,32 +1,23 @@
 package com.eniecole.eni_shop.bo
 
 import android.os.Parcelable
+import androidx.room.Entity
+import androidx.room.PrimaryKey
 import kotlinx.parcelize.Parcelize
+import kotlinx.serialization.Serializable
 
 
 @Parcelize
+@Entity
+@Serializable
 class Categorie(
-    private var _id: Long,
-    private var _name: String,
+    @PrimaryKey
+    var id: Long,
+    var name: String,
 ) : Parcelable {
-
-    var id: Long
-        get() = _id
-        set(value) {
-            _id = value
-        }
-
-    var name: String
-        get() = _name
-        set(value) {
-            _name = value
-        }
-
     override fun toString(): String {
         return "Categorie:\n" +
-                "id=$_id,\n" +
-                "name='$_name',\n"
+                "id=$id,\n" +
+                "name='$name',\n"
     }
-
-
 }

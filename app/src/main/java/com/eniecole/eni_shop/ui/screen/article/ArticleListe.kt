@@ -39,8 +39,8 @@ fun ControllerArticleListe(
     var selectedCategory: Categorie? by rememberSaveable() { mutableStateOf(null) }
 
     ArticleListe(
-        categories = categories as MutableList<Categorie>,
-        articles = articles as MutableList<Article>,
+        categories = categories,
+        articles = articles,
         selectedCategory = selectedCategory,
         modifier = modifier,
         onArticleClick = onArticleClick,
@@ -52,8 +52,8 @@ fun ControllerArticleListe(
 
 @Composable
 fun ArticleListe(
-    categories: MutableList<Categorie>,
-    articles: MutableList<Article>,
+    categories: List<Categorie>,
+    articles: List<Article>,
     selectedCategory: Categorie?,
     onCategorieSelected: (Categorie?) -> Unit,
     onArticleClick: (Long) -> Unit,
@@ -77,7 +77,7 @@ fun ArticleListe(
             )
         }
 
-        val filtredArticles = articles.filter { article -> article.category.equals(selectedCategory) }
+        val filtredArticles = articles.filter { article -> article.category.id == selectedCategory?.id }
         val articleItems = if (filtredArticles.isEmpty() && selectedCategory == null) {
             articles
         } else {
@@ -88,7 +88,7 @@ fun ArticleListe(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.Center
             ) {
-                Text("Pas d'articles dans cette catégorie")
+                Text("Il n'y a pas d'articles pour le moment")
             }
         }else{
             LazyVerticalGrid(

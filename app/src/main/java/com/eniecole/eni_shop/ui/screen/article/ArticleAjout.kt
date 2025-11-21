@@ -13,6 +13,7 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -21,9 +22,11 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.eniecole.eni_shop.ui.common.MyTextFieldNumber
 import com.eniecole.eni_shop.ui.common.MyTextFieldString
 import com.eniecole.eni_shop.ui.screen.categorie.CategorieDropdownMenu
+import com.eniecole.eni_shop.vm.ArticleAjouterViewModel
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
@@ -33,7 +36,12 @@ fun ControllerArticleAjout(
 }
 
 @Composable
-fun ArticleAjout(modifier: Modifier = Modifier) {
+fun ArticleAjout(
+    modifier: Modifier = Modifier,
+    articleAjouterViewModel: ArticleAjouterViewModel = viewModel(factory = ArticleAjouterViewModel.Factory)
+) {
+
+    val articles by articleAjouterViewModel.article.collectAsState()
 
     val context = LocalContext.current
     var titre by remember { mutableStateOf("") }
@@ -60,6 +68,7 @@ fun ArticleAjout(modifier: Modifier = Modifier) {
             Button(
                 onClick = {
                     Toast.makeText(context, "Article enregistré", Toast.LENGTH_LONG).show()
+
                 }
             ) {
                 Text(text = "Enregister")

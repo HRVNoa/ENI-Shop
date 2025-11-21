@@ -44,15 +44,29 @@ fun ControllerArticleDetail(
         articleDetailViewModel.loadArticle(id)
     }
     val article by articleDetailViewModel.article.collectAsState()
+    val isFavoris by articleDetailViewModel.isFavoris.collectAsState()
     article?.let {
-        it1 -> ArticleDetail(it1, modifier = modifier)
+        it1 -> ArticleDetail(
+            article = it1,
+            isFavoris = isFavoris,
+            modifier = modifier,
+            onCheckedChange = {
+                if (isFavoris){
+                    articleDetailViewModel.deleteArticle(it1)
+                }else{
+                    articleDetailViewModel.insertArticle()
+                }
+            }
+        )
     } ?: Error404(modifier = modifier)
 }
 
 @Composable
 fun ArticleDetail(
     article: Article,
+    isFavoris : Boolean,
     modifier: Modifier = Modifier,
+    onCheckedChange: () -> Unit
 ) {
 
     val context = LocalContext.current
@@ -111,7 +125,12 @@ fun ArticleDetail(
             horizontalArrangement = Arrangement.Center,
             verticalAlignment = Alignment.CenterVertically
         ) {
-            Checkbox(checked = true, onCheckedChange = {})
+            Checkbox(
+                checked = isFavoris,
+                onCheckedChange = {
+                    onCheckedChange()
+                }
+            )
             Text(text = "Favoris")
         }
     }

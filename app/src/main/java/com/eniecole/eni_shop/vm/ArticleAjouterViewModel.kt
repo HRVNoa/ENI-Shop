@@ -1,62 +1,36 @@
 package com.eniecole.eni_shop.vm
 
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProvider.AndroidViewModelFactory.Companion.APPLICATION_KEY
 import androidx.lifecycle.viewModelScope
 import androidx.lifecycle.viewmodel.CreationExtras
-import androidx.lifecycle.viewmodel.compose.viewModel
 import com.eniecole.eni_shop.AppDatabase
 import com.eniecole.eni_shop.bo.Article
+import com.eniecole.eni_shop.bo.Categorie
 import com.eniecole.eni_shop.dao.DaoType
 import com.eniecole.eni_shop.dao.memory.DaoFactory
 import com.eniecole.eni_shop.repository.ArticleRepository
+import com.eniecole.eni_shop.repository.CategorieRepository
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 
-class ArticleDetailViewModel(
+class ArticleAjouterViewModel(
     private val articleRepository: ArticleRepository,
 ) : ViewModel() {
 
     private val _article = MutableStateFlow<Article?>(null)
     val article: StateFlow<Article?> = _article.asStateFlow()
 
-    private val _isFavoris = MutableStateFlow(false)
-    val isFavoris = _isFavoris.asStateFlow()
-
-
-
-    fun loadArticle(id: Long) {
-        viewModelScope.launch(Dispatchers.IO) {
-            _article.value = articleRepository.getArticle(id)
-            val articleFav = articleRepository.getArticle(id, DaoType.ROOM)
-            if(articleFav != null){
-                _isFavoris.value = true
-            }
-        }
-    }
-
-    fun insertArticle(){
-        viewModelScope.launch(Dispatchers.IO) {
-            _article.value?.let {
-                articleRepository.addArticle(article = it, type = DaoType.ROOM)
-                _isFavoris.value = true
-            }
-        }
-    }
-
-    fun deleteArticle(article: Article){
-        viewModelScope.launch {
-            articleRepository.delete(article = article, DaoType.ROOM)
-            _isFavoris.value = false
-        }
-    }
 
     companion object {
-        fun Factory(): ViewModelProvider.Factory =
+        var Factory: ViewModelProvider.Factory =
             object : ViewModelProvider.Factory {
                 @Suppress("UNCHECKED_CAST")
                 override fun <T : ViewModel> create(
@@ -64,7 +38,7 @@ class ArticleDetailViewModel(
                     extras: CreationExtras
                 ): T {
                     val application = checkNotNull(extras[APPLICATION_KEY])
-                    return ArticleDetailViewModel(
+                    return ArticleAjouterViewModel(
                         articleRepository = ArticleRepository(
                             AppDatabase.getInstance(application.applicationContext).getArticleDao(),
                             DaoFactory.createArticleDao(DaoType.MEMORY)
