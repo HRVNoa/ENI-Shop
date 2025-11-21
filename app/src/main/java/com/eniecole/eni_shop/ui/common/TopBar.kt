@@ -13,6 +13,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.MoreVert
+import androidx.compose.material.icons.filled.Refresh
 import androidx.compose.material.icons.filled.ShoppingCart
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
@@ -43,7 +44,7 @@ import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun TopBar(modifier: Modifier = Modifier, canBack: Boolean = false, onBackClic: () -> Unit) {
+fun TopBar(modifier: Modifier = Modifier, canBack: Boolean = false, onBackClic: () -> Unit, onRefreshClic: () -> Unit) {
 
     var expanded by remember { mutableStateOf(false) }
     val coroutine = rememberCoroutineScope()
@@ -118,6 +119,26 @@ fun TopBar(modifier: Modifier = Modifier, canBack: Boolean = false, onBackClic: 
                                 Row(
                                     verticalAlignment = Alignment.CenterVertically,
                                     horizontalArrangement = Arrangement.SpaceAround,
+                                    modifier = Modifier.width(180.dp).clickable(onClick = {
+                                        onRefreshClic()
+                                    })
+                                ) {
+                                    Text("Refresh")
+                                    Icon(
+                                        Icons.Default.Refresh,
+                                        "Refresh"
+                                    )
+                                }
+                            },
+                            onClick = {
+                                expanded = false
+                            }
+                        )
+                        DropdownMenuItem(
+                            text = {
+                                Row(
+                                    verticalAlignment = Alignment.CenterVertically,
+                                    horizontalArrangement = Arrangement.SpaceAround,
                                     modifier = Modifier.width(180.dp)
                                 ) {
                                     Text("Dark Mode")
@@ -135,9 +156,9 @@ fun TopBar(modifier: Modifier = Modifier, canBack: Boolean = false, onBackClic: 
                                 expanded = false
                             }
                         )
+
                     }
                 }
-
             }
         },
         modifier = Modifier

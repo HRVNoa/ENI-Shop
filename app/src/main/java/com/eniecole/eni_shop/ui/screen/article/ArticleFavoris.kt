@@ -1,0 +1,116 @@
+package com.eniecole.eni_shop.ui.screen.article
+
+import android.annotation.SuppressLint
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.lazy.grid.GridCells
+import androidx.compose.foundation.lazy.grid.items
+import androidx.compose.material3.Text
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewmodel.compose.viewModel
+import com.eniecole.eni_shop.bo.Article
+import com.eniecole.eni_shop.bo.Categorie
+import com.eniecole.eni_shop.ui.common.CategorieFilterChip
+import com.eniecole.eni_shop.vm.ArticleFavorisViewModel
+import com.eniecole.eni_shop.vm.ArticleListViewModel
+
+@SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
+@Composable
+fun ControllerArticleFavoris(
+    modifier: Modifier = Modifier,
+    onArticleClick: (Long) -> Unit,
+    articleFavorisViewModel: ArticleFavorisViewModel = viewModel(factory = ArticleFavorisViewModel.Factory)
+) {
+    val articles by articleFavorisViewModel.articles.collectAsState()
+    val categories by articleFavorisViewModel.categories.collectAsState()
+    var selectedCategory: Categorie? by rememberSaveable() { mutableStateOf(null) }
+
+    ArticleFavoris(
+        categories = categories,
+        articles = articles,
+        selectedCategory = selectedCategory,
+        modifier = modifier,
+        onArticleClick = onArticleClick,
+        onCategorieSelected = {
+            selectedCategory = it
+        }
+    )
+}
+
+@Composable
+fun ArticleFavoris(
+    categories: List<Categorie>,
+    articles: List<Article>,
+    selectedCategory: Categorie?,
+    onCategorieSelected: (Categorie?) -> Unit,
+    onArticleClick: (Long) -> Unit,
+    modifier: Modifier = Modifier
+) {
+
+    Column(modifier = modifier
+        .fillMaxSize()
+        .padding(16.dp)
+    ) {
+        Column {
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(bottom = 16.dp)
+            ) {
+                CategorieFilterChip(
+                    categories = categories,
+                    selectedCategorie = selectedCategory,
+                    onCategorieChange = {
+                        onCategorieSelected(it)
+                    }
+                )
+            }
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(bottom = 16.dp),
+                horizontalArrangement = Arrangement.Center
+            ) {
+                Text(text = "Article en favoris")
+            }
+        }
+
+        val filtredArticles = articles.filter { article -> article.category.id == selectedCategory?.id }
+        val articleItems = if (filtredArticles.isEmpty() && selectedCategory == null) {
+            articles
+        } else {
+            filtredArticles
+        }
+        if (articleItems.isEmpty()){
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.Center
+            ) {
+                Text("Il n'y a pas d'articles pour le moment")
+            }
+        }else{
+            LazyVerticalGrid(
+                columns = GridCells.Fixed(2),
+                horizontalArrangement = Arrangement.spacedBy(8.dp),
+                verticalArrangement = Arrangement.spacedBy(8.dp)
+            ) {
+                items(articleItems) { article ->
+                    ArticleItem(article = article, modifier = Modifier.clickable(onClick = {onArticleClick(article.id)}))
+                }
+            }
+        }
+    }
+}

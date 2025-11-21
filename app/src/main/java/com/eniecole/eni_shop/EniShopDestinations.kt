@@ -11,6 +11,10 @@ object ArticleAjouterRoute {
     val route: String = "article/ajouter"
 }
 
+object ArticleFavorisRoute {
+    val route: String = "article/favoris"
+}
+
 object ArticleDetailRoute {
     val route: String = "article/detail"
 

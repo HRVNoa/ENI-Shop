@@ -29,6 +29,7 @@ import com.eniecole.eni_shop.ui.screen.article.ArticleAjouterFAB
 import com.eniecole.eni_shop.ui.screen.article.ControllerArticleAjout
 import com.eniecole.eni_shop.ui.screen.article.ControllerArticleListe
 import com.eniecole.eni_shop.ui.screen.article.ControllerArticleDetail
+import com.eniecole.eni_shop.ui.screen.article.ControllerArticleFavoris
 import com.eniecole.eni_shop.ui.theme.Eni_shopTheme
 
 private const val TAG = "MainActivity"
@@ -68,6 +69,7 @@ fun EniShopApp(modifier: Modifier = Modifier) {
         topBar = {
             TopBar(
                 onBackClic = { navController.popBackStack() },
+                onRefreshClic = { navController.navigate(currentRoute ?: "") },
                 canBack = currentRoute != ArticleListeRoute.route)
         },
         floatingActionButton = {
@@ -79,7 +81,7 @@ fun EniShopApp(modifier: Modifier = Modifier) {
                 )
             }
         },
-        bottomBar = { BottomBar() }
+        bottomBar = { BottomBar(navController = navController) }
     ){ padding ->
         Column(
             Modifier.padding(padding
@@ -106,6 +108,17 @@ fun EniShopNavHost(
             route = ArticleListeRoute.route
         ) {
             ControllerArticleListe(
+                modifier = modifier,
+                onArticleClick = { id ->
+                    navController.navigate("${ArticleDetailRoute.route}/$id")
+                }
+            )
+        }
+
+        composable(
+            route = ArticleFavorisRoute.route
+        ) {
+            ControllerArticleFavoris(
                 modifier = modifier,
                 onArticleClick = { id ->
                     navController.navigate("${ArticleDetailRoute.route}/$id")
