@@ -52,7 +52,7 @@ fun ControllerArticleDetail(
             modifier = modifier,
             onCheckedChange = {
                 if (isFavoris){
-                    articleDetailViewModel.deleteArticle(it1)
+                    articleDetailViewModel.deleteArticle()
                 }else{
                     articleDetailViewModel.insertArticle()
                 }

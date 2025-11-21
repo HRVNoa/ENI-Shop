@@ -11,6 +11,8 @@ import com.eniecole.eni_shop.bo.Article
 import com.eniecole.eni_shop.dao.DaoType
 import com.eniecole.eni_shop.dao.memory.DaoFactory
 import com.eniecole.eni_shop.repository.ArticleRepository
+import com.eniecole.eni_shop.services.ArticleService
+import com.eniecole.eni_shop.services.CallArticleApi
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -19,6 +21,7 @@ import kotlinx.coroutines.launch
 
 class ArticleDetailViewModel(
     private val articleRepository: ArticleRepository,
+    private val articleService: ArticleService
 ) : ViewModel() {
 
     private val _article = MutableStateFlow<Article?>(null)
@@ -31,7 +34,7 @@ class ArticleDetailViewModel(
 
     fun loadArticle(id: Long) {
         viewModelScope.launch(Dispatchers.IO) {
-            _article.value = articleRepository.getArticle(id)
+            _article.value = articleService.getById(id.toString())
             val articleFav = articleRepository.getArticle(id, DaoType.ROOM)
             if(articleFav != null){
                 _isFavoris.value = true
@@ -48,10 +51,12 @@ class ArticleDetailViewModel(
         }
     }
 
-    fun deleteArticle(article: Article){
+    fun deleteArticle(){
         viewModelScope.launch {
-            articleRepository.delete(article = article, DaoType.ROOM)
-            _isFavoris.value = false
+            _article.value?.let {
+                articleRepository.delete(article = it, DaoType.ROOM)
+                _isFavoris.value = false
+            }
         }
     }
 
@@ -69,6 +74,7 @@ class ArticleDetailViewModel(
                             AppDatabase.getInstance(application.applicationContext).getArticleDao(),
                             DaoFactory.createArticleDao(DaoType.MEMORY)
                         ),
+                        CallArticleApi.retrofitService
                     ) as T
                 }
             }

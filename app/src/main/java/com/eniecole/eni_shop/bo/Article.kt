@@ -1,11 +1,8 @@
 package com.eniecole.eni_shop.bo
 
-import androidx.room.Embedded
 import androidx.room.Entity
 import androidx.room.PrimaryKey
-import androidx.room.TypeConverter
-import kotlinx.serialization.encodeToString
-import kotlinx.serialization.json.Json
+import com.squareup.moshi.Json
 import java.util.Date
 
 
@@ -14,12 +11,22 @@ import java.util.Date
 class Article(
     @PrimaryKey
     var id: Long = 0,
+
+    @Json(name = "title")
     var name: String,
+
     var description: String,
+
     var price: Double,
+
+    @Json(name = "image")
     var urlImage: String,
-    var category: Categorie,
-    var date: Date,
+
+    @Json(ignore = true)
+    var category: Categorie = Categorie(0,"null"),
+
+    @Json(ignore = true)
+    var date: Date = Date(),
 ) {
     override fun toString(): String {
         return "Article:\n" +

@@ -12,6 +12,8 @@ import com.eniecole.eni_shop.dao.DaoType
 import com.eniecole.eni_shop.dao.memory.DaoFactory
 import com.eniecole.eni_shop.repository.ArticleRepository
 import com.eniecole.eni_shop.repository.CategorieRepository
+import com.eniecole.eni_shop.services.ArticleService
+import com.eniecole.eni_shop.services.CallArticleApi
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -20,7 +22,8 @@ import kotlinx.coroutines.launch
 
 class ArticleListViewModel(
     private val articleRepository: ArticleRepository,
-    private val categorieRepository: CategorieRepository
+    private val categorieRepository: CategorieRepository,
+    private val articleService: ArticleService
 ): ViewModel() {
 
     private val _articles = MutableStateFlow<List<Article>>(emptyList())
@@ -30,7 +33,7 @@ class ArticleListViewModel(
 
     init {
         viewModelScope.launch(Dispatchers.IO) {
-            _articles.value = articleRepository.findAll()
+            _articles.value = articleService.getAll()
             _categories.value = categorieRepository.findAll()
         }
     }
@@ -50,8 +53,9 @@ class ArticleListViewModel(
                     ),
                     CategorieRepository(
                         AppDatabase.getInstance(application.applicationContext).getCategorieDao(),
-                        DaoFactory.createCategorieDao(DaoType.MEMORY)
-                    )
+                        DaoFactory.createCategorieDao(DaoType.MEMORY),
+                    ),
+                    CallArticleApi.retrofitService
                 ) as T
             }
         }

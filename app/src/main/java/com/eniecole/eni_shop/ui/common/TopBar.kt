@@ -118,7 +118,7 @@ fun TopBar(modifier: Modifier = Modifier, canBack: Boolean = false, onBackClic: 
                             text = {
                                 Row(
                                     verticalAlignment = Alignment.CenterVertically,
-                                    horizontalArrangement = Arrangement.SpaceAround,
+                                    horizontalArrangement = Arrangement.SpaceBetween,
                                     modifier = Modifier.width(180.dp).clickable(onClick = {
                                         onRefreshClic()
                                     })
@@ -138,7 +138,7 @@ fun TopBar(modifier: Modifier = Modifier, canBack: Boolean = false, onBackClic: 
                             text = {
                                 Row(
                                     verticalAlignment = Alignment.CenterVertically,
-                                    horizontalArrangement = Arrangement.SpaceAround,
+                                    horizontalArrangement = Arrangement.SpaceBetween,
                                     modifier = Modifier.width(180.dp)
                                 ) {
                                     Text("Dark Mode")
